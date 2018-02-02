@@ -7,7 +7,7 @@ install:
     - pip install coverage flake8
 script:
     - flake8
-    - coverage run `while trial` vumi_unidecode_middleware
+    - coverage run `which trial` vumi_unidecode_middleware
 after_success:
     - pip install coveralls
     - coveralls
