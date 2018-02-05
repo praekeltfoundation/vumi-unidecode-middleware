@@ -36,6 +36,10 @@ class UnidecodeMiddleware(BaseMiddleware):
     def convert_inbound(self):
         return self.config.message_direction in [self.INBOUND, self.BOTH]
 
+    @property
+    def convert_outbound(self):
+        return self.config.message_direction in [self.OUTBOUND, self.BOTH]
+
     def _convert_string(self, string):
         new_content = []
         for char in string:
@@ -50,10 +54,5 @@ class UnidecodeMiddleware(BaseMiddleware):
             message['content'] = self._convert_string(message['content'])
 
     def handle_outbound(self, message, connector_name):
-        pass
-
-    def handle_event(self, event, connector_name):
-        pass
-
-    def handle_failure(self, failure, connector_name):
-        pass
+        if self.convert_outbound:
+            message['content'] = self._convert_string(message['content'])
