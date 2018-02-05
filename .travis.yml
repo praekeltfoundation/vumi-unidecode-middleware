@@ -1,0 +1,13 @@
+language: python
+python:
+    - 2.7
+cache: pip
+install:
+    - pip install -e .
+    - pip install coverage flake8
+script:
+    - flake8
+    - coverage run `which trial` vumi_unidecode_middleware
+after_success:
+    - pip install coveralls
+    - coveralls
