@@ -1,4 +1,5 @@
 from confmodel.errors import ConfigError
+from vumi.message import TransportUserMessage
 from vumi.tests.helpers import VumiTestCase
 
 from vumi_unidecode_middleware import UnidecodeMiddleware
@@ -14,6 +15,11 @@ class UnidecodeMiddlewareTests(VumiTestCase):
         mw.setup_middleware()
         self.addCleanup(mw.teardown_middleware)
         return mw
+
+    def make_message(self, content):
+        return TransportUserMessage(
+            to_addr="45678", from_addr="12345", content=content,
+            transport_name="test", transport_type="test")
 
     def test_make_unidecode_middleware(self):
         """
@@ -31,3 +37,51 @@ class UnidecodeMiddlewareTests(VumiTestCase):
         with self.assertRaises(ConfigError) as e:
             self.make_unidecode_middleware({'message_direction': 'foo'})
         self.assertIn('foo', e.exception.message)
+
+    def test_outbound_inbound_messages_not_converted(self):
+        """
+        If the config is set for outbound messages, then inbound messages
+        shouldn't be converted
+        """
+        middleware = self.make_unidecode_middleware({
+            'message_direction': 'outbound',
+        })
+        message = self.make_message(u"\u201C")
+        middleware.handle_inbound(message, "test")
+        self.assertEqual(message['content'], u"\u201C")
+
+    def test_inbound_messages_converted(self):
+        """
+        If the config is set for inbound messages, then inbound messages should
+        be converted
+        """
+        middleware = self.make_unidecode_middleware({
+            'message_direction': 'inbound',
+        })
+        message = self.make_message(u"\u201C")
+        middleware.handle_inbound(message, "test")
+        self.assertEqual(message['content'], u'"')
+
+    def test_both_inbound_messages_converted(self):
+        """
+        If the config is set for both inbound and outbound messages, then
+        inbound messages should be converted
+        """
+        middleware = self.make_unidecode_middleware({
+            'message_direction': 'both',
+        })
+        message = self.make_message(u"\u201C")
+        middleware.handle_inbound(message, "test")
+        self.assertEqual(message['content'], u'"')
+
+    def test_ignore_characters_skips_characters(self):
+        """
+        If there are ignore characters specified, those characters should not
+        be converted
+        """
+        middleware = self.make_unidecode_middleware({
+            'ignore_characters': u"\u201C\u2018",
+        })
+        message = self.make_message(u"\u201C\u201D\u2018\u2019")
+        middleware.handle_inbound(message, "test")
+        self.assertEqual(message['content'], u"""\u201C"\u2018'""")

@@ -32,8 +32,22 @@ class UnidecodeMiddleware(BaseMiddleware):
                 "{} is not a valid direction. Must be one of {}".format(
                     self.config.message_direction, self.MESSAGE_DIRECTIONS))
 
+    @property
+    def convert_inbound(self):
+        return self.config.message_direction in [self.INBOUND, self.BOTH]
+
+    def _convert_string(self, string):
+        new_content = []
+        for char in string:
+            if char in self.config.ignore_characters:
+                new_content.append(char)
+            else:
+                new_content.append(unidecode(char))
+        return ''.join(new_content)
+
     def handle_inbound(self, message, connector_name):
-        pass
+        if self.convert_inbound:
+            message['content'] = self._convert_string(message['content'])
 
     def handle_outbound(self, message, connector_name):
         pass
