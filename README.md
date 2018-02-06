@@ -6,6 +6,15 @@
 The path to the middleware class is
 `vumi_unidecode_middleware.UnidecodeMiddleware`.
 
+There are two optional config parameters.
+
+`message_direction` must be one of `inbound`, `outbound`, or `both`. This
+limits whether to transform inbound, outbound, or both inbound and outbound
+messages. Defaults to `both`
+
+`ignore_characters` is a string of characters that, excluding ASCII characters,
+will be excluded from being converted. Defaults to no characters.
+
 For more information on how to run vumi middleware, please consult the [vumi
 middleware documentation][vumi_middleware].
 
