@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='vumi_unidecode_middleware',
-    version='0.0.1',
+    version='0.0.2',
     url='https://github.com/praekeltfoundation/vumi-unidecode-middleware',
     license='BSD',
     description='Vumi middleware that runs message content through unidecode',
