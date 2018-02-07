@@ -52,7 +52,9 @@ class UnidecodeMiddleware(BaseMiddleware):
     def handle_inbound(self, message, connector_name):
         if self.convert_inbound:
             message['content'] = self._convert_string(message['content'])
+        return message
 
     def handle_outbound(self, message, connector_name):
         if self.convert_outbound:
             message['content'] = self._convert_string(message['content'])
+        return message
