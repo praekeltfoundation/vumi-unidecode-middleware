@@ -47,7 +47,7 @@ class UnidecodeMiddlewareTests(VumiTestCase):
             'message_direction': 'outbound',
         })
         message = self.make_message(u"\u201C")
-        middleware.handle_inbound(message, "test")
+        message = middleware.handle_inbound(message, "test")
         self.assertEqual(message['content'], u"\u201C")
 
     def test_inbound_messages_converted(self):
@@ -59,7 +59,7 @@ class UnidecodeMiddlewareTests(VumiTestCase):
             'message_direction': 'inbound',
         })
         message = self.make_message(u"\u201C")
-        middleware.handle_inbound(message, "test")
+        message = middleware.handle_inbound(message, "test")
         self.assertEqual(message['content'], u'"')
 
     def test_both_messages_converted(self):
@@ -72,11 +72,11 @@ class UnidecodeMiddlewareTests(VumiTestCase):
         })
 
         message = self.make_message(u"\u201C")
-        middleware.handle_inbound(message, "test")
+        message = middleware.handle_inbound(message, "test")
         self.assertEqual(message['content'], u'"')
 
         message = self.make_message(u"\u201C")
-        middleware.handle_outbound(message, "test")
+        message = middleware.handle_outbound(message, "test")
         self.assertEqual(message['content'], u'"')
 
     def test_ignore_characters_skips_characters(self):
@@ -88,7 +88,7 @@ class UnidecodeMiddlewareTests(VumiTestCase):
             'ignore_characters': u"\u201C\u2018",
         })
         message = self.make_message(u"\u201C\u201D\u2018\u2019")
-        middleware.handle_inbound(message, "test")
+        message = middleware.handle_inbound(message, "test")
         self.assertEqual(message['content'], u"""\u201C"\u2018'""")
 
     def test_inbound_outbound_messages_not_converted(self):
@@ -100,7 +100,7 @@ class UnidecodeMiddlewareTests(VumiTestCase):
             'message_direction': 'inbound',
         })
         message = self.make_message(u"\u201C")
-        middleware.handle_outbound(message, "test")
+        message = middleware.handle_outbound(message, "test")
         self.assertEqual(message['content'], u"\u201C")
 
     def test_outbound_messages_converted(self):
@@ -112,5 +112,5 @@ class UnidecodeMiddlewareTests(VumiTestCase):
             'message_direction': 'outbound',
         })
         message = self.make_message(u"\u201C")
-        middleware.handle_outbound(message, "test")
+        message = middleware.handle_outbound(message, "test")
         self.assertEqual(message['content'], u'"')
