@@ -11,3 +11,11 @@ script:
 after_success:
     - pip install coveralls
     - coveralls
+deploy:
+    provider: pypi
+    user: praekelt.org
+    password:
+        secure: bWssbZ3A7B8WAXFVXOIMSl0t6iAPmiaUBamYh/BAguNvwzknKkSBp+l68bUaeb16ZyVhrb5mykH/1jCcSXrML4mLr7gdQL8xQIeHElPRUvpsp6svy/MWVv9gwUMXrwwCtlOPRxm5iWli3EbV06MU2QtYZlw6vkRicWS/+J4BEgJqGs58CLx+6KsbxMWPF7EBCumK8ZETf0UmYTQRuFPUeodb9KCpjuOjrGcpB1/MNHd/6CsOQ1GBtShF2wstJpxvsHGxhbUZSvuk/bzb4OWFsIaqVCCjbufqDjBm2d5vOLS524+x7+SygdpsSLTyexxOdBpBeqovwtB31qkO6LUMPt1llRsojC2DGFS3coLyHUHXO4uiiepE6OeTB0PVx9/HFNnScX1EMTuPGbGLbYlbecUSUWmdKJlEXifWfq7E+8f6SV7UeZ6Prg0hCFXVUz0o3981yK9BluxwlSneCvBNTnFLpkGiXUB6yjlLVZNfZmxeMRseVcEl/Bt4/u8DCtcmHpDikMtBa+12pDTBDuY6tv3OKgehQahSih+iZOKy1RfQv07IuGbi1tjeVP2KYwglvNRdo8pChTG6GVWmgoQjJjceiuU7/LW4iJYDT9wv217gVVzzMDhSzVegsCfkpA8md/AAKA3b70m1AfUITrQcNnx4DBbsisY4gLmUJGy/qww=
+    on:
+        tags: true
+    distributions: "sdist bdist_wheel"
